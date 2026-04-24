@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGUDOB — Sistem Informasi Gudang Obat</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-50: #EFF6FF;
+    --blue-100: #DBEAFE;
+    --blue-200: #BFDBFE;
+    --blue-400: #60A5FA;
+    --blue-500: #3B82F6;
+    --blue-600: #2563EB;
+    --blue-700: #1D4ED8;
+    --blue-800: #1E40AF;
+    --blue-900: #1E3A8A;
+    --sky-50: #F0F9FF;
+    --sky-100: #E0F2FE;
+    --sky-200: #BAE6FD;
+    --sky-400: #38BDF8;
+    --sky-500: #0EA5E9;
+    --sky-600: #0284C7;
+    --white: #FFFFFF;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-400: #94A3B8;
+    --gray-500: #64748B;
+    --gray-700: #334155;
+    --gray-800: #1E293B;
+    --gray-900: #0F172A;
+    --font: 'Plus Jakarta Sans', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 32px;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--white);
+    color: var(--gray-800);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--blue-100);
+    padding: 0 5%;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--blue-600);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-logo-icon svg { width: 20px; height: 20px; }
+  .nav-logo-text {
+    font-family: var(--font);
+    font-weight: 800;
+    font-size: 17px;
+    color: var(--blue-800);
+    letter-spacing: -0.3px;
+  }
+  .nav-logo-text span { color: var(--sky-500); }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-500);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--blue-600); }
+  .nav-cta {
+    background: var(--blue-600);
+    color: var(--white) !important;
+    padding: 9px 22px;
+    border-radius: var(--radius-sm);
+    font-weight: 600 !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--blue-700) !important; color: var(--white) !important; }
+
+  /* HERO */
+  .hero {
+    padding-top: 120px;
+    padding-bottom: 0;
+    background: linear-gradient(160deg, var(--blue-50) 0%, var(--sky-50) 40%, var(--white) 80%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -150px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 50px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(14,165,233,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 5%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--blue-100);
+    color: var(--blue-700);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: 0.2px;
+  }
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    background: var(--blue-500);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .hero h1 {
+    font-family: var(--font);
+    font-size: clamp(32px, 4.5vw, 52px);
+    font-weight: 800;
+    line-height: 1.12;
+    color: var(--gray-900);
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+  }
+  .hero h1 .accent { color: var(--blue-600); }
+  .hero-desc {
+    font-size: 17px;
+    color: var(--gray-500);
+    line-height: 1.75;
+    margin-bottom: 36px;
+    max-width: 440px;
+  }
+  .hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--blue-600);
+    color: var(--white);
+    padding: 14px 28px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.28);
+  }
+  .btn-primary:hover {
+    background: var(--blue-700);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(37,99,235,0.35);
+  }
+  .btn-primary svg { width: 18px; height: 18px; }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--blue-700);
+    padding: 14px 24px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1.5px solid var(--blue-200);
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover {
+    border-color: var(--blue-400);
+    background: var(--blue-50);
+  }
+  .hero-stats {
+    display: flex;
+    gap: 28px;
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--blue-100);
+  }
+  .hero-stat-num {
+    font-family: var(--font);
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--blue-700);
+    letter-spacing: -0.5px;
+  }
+  .hero-stat-label { font-size: 12.5px; color: var(--gray-400); font-weight: 500; }
+
+  /* MOCKUP */
+  .hero-visual {
+    position: relative;
+    padding-bottom: 20px;
+  }
+  .mockup-shell {
+    background: var(--white);
+    border: 1.5px solid var(--blue-100);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(30,64,175,0.12), 0 4px 16px rgba(30,64,175,0.06);
+  }
+  .mockup-bar {
+    background: var(--gray-800);
+    height: 38px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 7px;
+  }
+  .mb-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .mb-dot.r { background: #FF5F56; }
+  .mb-dot.y { background: #FFBD2E; }
+  .mb-dot.g { background: #27C93F; }
+  .mb-addr {
+    flex: 1;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    height: 22px;
+    margin: 0 14px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 6px;
+  }
+  .mb-addr-text { font-size: 11px; color: rgba(255,255,255,0.5); font-family: monospace; }
+  .mockup-body {
+    display: flex;
+    height: 360px;
+  }
+  .mock-sidebar {
+    width: 180px;
+    background: var(--blue-900);
+    padding: 16px 12px;
+    flex-shrink: 0;
+  }
+  .mock-logo-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 14px;
+  }
+  .mock-logo-sq {
+    width: 24px; height: 24px;
+    background: var(--sky-400);
+    border-radius: 5px;
+  }
+  .mock-logo-txt { font-size: 11px; font-weight: 700; color: var(--white); font-family: var(--font); letter-spacing: 0.3px; }
+  .mock-nav-section { font-size: 9px; color: rgba(255,255,255,0.35); font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; padding: 0 8px; margin: 10px 0 4px; }
+  .mock-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    margin-bottom: 2px;
+  }
+  .mock-nav-item.active {
+    background: rgba(255,255,255,0.12);
+    color: var(--white);
+  }
+  .mock-nav-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.25); flex-shrink: 0; }
+  .mock-nav-dot.active-dot { background: var(--sky-400); }
+  .mock-main { flex: 1; background: var(--gray-50); padding: 16px; overflow: hidden; }
+  .mock-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .mock-page-title { font-size: 13px; font-weight: 700; color: var(--gray-800); font-family: var(--font); }
+  .mock-user-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 20px;
+    padding: 4px 10px;
+  }
+  .mock-avatar { width: 18px; height: 18px; background: var(--blue-500); border-radius: 50%; }
+  .mock-username { font-size: 10px; color: var(--gray-500); }
+  .mock-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .mock-stat-card {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 9px;
+  }
+  .mock-stat-label { font-size: 8.5px; color: var(--gray-400); margin-bottom: 3px; }
+  .mock-stat-num { font-family: var(--font); font-size: 16px; font-weight: 800; color: var(--blue-700); }
+  .mock-stat-num.warn { color: #DC2626; }
+  .mock-stat-num.ok { color: #16A34A; }
+  .mock-table-area {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .mock-table-head {
+    background: var(--blue-50);
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 7px 10px;
+    gap: 8px;
+    border-bottom: 1px solid var(--blue-100);
+  }
+  .mock-th { font-size: 8.5px; font-weight: 700; color: var(--blue-700); text-transform: uppercase; letter-spacing: 0.5px; }
+  .mock-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    padding: 6px 10px;
+    gap: 8px;
+    border-bottom: 1px solid var(--gray-100);
+    align-items: center;
+  }
+  .mock-td { font-size: 9.5px; color: var(--gray-700); }
+  .mock-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 8px;
+    font-weight: 700;
+  }
+  .mock-badge.kritis { background: #FEE2E2; color: #DC2626; }
+  .mock-badge.aman { background: #DCFCE7; color: #16A34A; }
+  .mock-badge.hampir { background: #FEF9C3; color: #CA8A04; }
+  .mock-chart-mini {
+    margin-top: 10px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 10px;
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  .mock-bar {
+    flex: 1;
+    background: var(--blue-200);
+    border-radius: 3px 3px 0 0;
+    transition: height 0.3s;
+  }
+  .mock-bar.active { background: var(--blue-500); }
+
+  /* FLOATING CARDS */
+  .float-card {
+    position: absolute;
+    background: var(--white);
+    border: 1.5px solid var(--blue-100);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    box-shadow: 0 8px 24px rgba(30,64,175,0.12);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .float-card.card-1 {
+    bottom: -10px;
+    left: -30px;
+  }
+  .float-card.card-2 {
+    top: 10px;
+    right: -25px;
+  }
+  .float-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .float-icon.green { background: #DCFCE7; }
+  .float-icon.blue { background: var(--blue-100); }
+  .float-card-title { font-size: 11px; font-weight: 700; color: var(--gray-800); font-family: var(--font); }
+  .float-card-sub { font-size: 10px; color: var(--gray-400); }
+
+  /* SECTIONS */
+  section { padding: 100px 5%; }
+  .section-inner { max-width: 1180px; margin: 0 auto; }
+  .section-label {
+    display: inline-block;
+    background: var(--blue-100);
+    color: var(--blue-700);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: var(--font);
+    font-size: clamp(26px, 3.5vw, 40px);
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -1px;
+    line-height: 1.18;
+    margin-bottom: 14px;
+  }
+  .section-title .blue { color: var(--blue-600); }
+  .section-desc {
+    font-size: 16px;
+    color: var(--gray-500);
+    max-width: 520px;
+    line-height: 1.7;
+  }
+  .section-header { margin-bottom: 56px; }
+
+  /* HOW IT WORKS */
+  .how-bg { background: var(--blue-50); }
+  .roles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+  .role-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    border: 1.5px solid var(--blue-100);
+  }
+  .role-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .role-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .role-icon.dinkes { background: var(--blue-100); }
+  .role-icon.puskesmas { background: var(--sky-100); }
+  .role-title {
+    font-family: var(--font);
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--gray-900);
+  }
+  .role-subtitle { font-size: 13px; color: var(--blue-600); font-weight: 600; }
+  .role-features { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .role-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.5;
+  }
+  .check-icon {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--blue-100);
+    color: var(--blue-700);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  /* FEATURES */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .feature-card {
+    background: var(--white);
+    border: 1.5px solid var(--gray-100);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .feature-card:hover {
+    border-color: var(--blue-200);
+    transform: translateY(-3px);
+  }
+  .feat-icon {
+    width: 48px; height: 48px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+  .feat-icon.blue { background: var(--blue-50); }
+  .feat-icon.sky { background: var(--sky-50); }
+  .feat-icon.green { background: #F0FDF4; }
+  .feat-icon.amber { background: #FFFBEB; }
+  .feat-icon.purple { background: #F5F3FF; }
+  .feat-icon.red { background: #FFF1F2; }
+  .feat-title {
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 8px;
+  }
+  .feat-desc { font-size: 13.5px; color: var(--gray-500); line-height: 1.65; }
+
+  /* TECH STACK */
+  .tech-section { background: var(--gray-900); }
+  .tech-section .section-title { color: var(--white); }
+  .tech-section .section-desc { color: var(--gray-400); }
+  .tech-section .section-label { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .tech-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-md);
+    padding: 22px;
+    text-align: center;
+    transition: background 0.2s;
+  }
+  .tech-card:hover { background: rgba(255,255,255,0.08); }
+  .tech-icon { font-size: 28px; margin-bottom: 10px; }
+  .tech-name {
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .tech-role { font-size: 11.5px; color: var(--gray-400); }
+
+  /* CTA */
+  .cta-section {
+    background: linear-gradient(135deg, var(--blue-700) 0%, var(--blue-600) 50%, var(--sky-500) 100%);
+    text-align: center;
+    padding: 100px 5%;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-section .section-title { color: var(--white); }
+  .cta-section .section-label { background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.9); }
+  .cta-desc { font-size: 17px; color: rgba(255,255,255,0.8); max-width: 480px; margin: 0 auto 40px; line-height: 1.7; }
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--white);
+    color: var(--blue-700);
+    padding: 16px 36px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+  .cta-btn svg { width: 20px; height: 20px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--gray-900);
+    padding: 48px 5%;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .footer-logo-icon {
+    width: 34px; height: 34px;
+    background: var(--blue-600);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .footer-logo-text {
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--white);
+  }
+  .footer-logo-text span { color: var(--sky-400); }
+  .footer-desc { font-size: 13px; color: var(--gray-400); margin-bottom: 6px; }
+  .footer-copy { font-size: 12px; color: rgba(255,255,255,0.2); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .hero-visual { order: -1; }
+    .float-card.card-1, .float-card.card-2 { display: none; }
+    .roles-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .tech-grid { grid-template-columns: repeat(2, 1fr); }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 600px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .mock-stats-row { grid-template-columns: repeat(2, 1fr); }
+    .mockup-body { height: 280px; }
+    .mock-sidebar { width: 130px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2" y="5" width="16" height="12" rx="2" fill="white" opacity="0.3"/>
+        <rect x="4" y="7" width="12" height="8" rx="1" fill="white" opacity="0.5"/>
+        <path d="M7 3h6l1 2H6L7 3z" fill="white"/>
+        <rect x="7" y="9" width="2" height="4" rx="0.5" fill="white"/>
+        <rect x="11" y="9" width="2" height="4" rx="0.5" fill="white"/>
+      </svg>
+    </div>
+    <span class="nav-logo-text">SIGU<span>DOB</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="#fitur">Fitur</a>
+    <a href="#cara-kerja">Cara Kerja</a>
+    <a href="#teknologi">Teknologi</a>
+    <a href="http://sistemgudangobat.infinityfreeapp.com/" target="_blank" class="nav-cta">Buka Aplikasi →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        Sistem Manajemen Gudang Obat
+      </div>
+      <h1>Kelola Stok Obat <span class="accent">Lebih Cerdas</span> & Efisien</h1>
+      <p class="hero-desc">
+        SIGUDOB adalah platform digital terintegrasi untuk Dinas Kesehatan dan Puskesmas dalam mengelola pengadaan, distribusi, dan monitoring stok obat secara real-time.
+      </p>
+      <div class="hero-actions">
+        <a href="http://sistemgudangobat.infinityfreeapp.com/" target="_blank" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+          Buka Aplikasi Sekarang
+        </a>
+        <a href="#cara-kerja" class="btn-secondary">Lihat Cara Kerja</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num">2 Role</div>
+          <div class="hero-stat-label">Dinkes & Puskesmas</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">15+</div>
+          <div class="hero-stat-label">Modul Lengkap</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">FEFO</div>
+          <div class="hero-stat-label">Metode Distribusi</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APP MOCKUP -->
+    <div class="hero-visual">
+      <div class="mockup-shell">
+        <div class="mockup-bar">
+          <div class="mb-dot r"></div>
+          <div class="mb-dot y"></div>
+          <div class="mb-dot g"></div>
+          <div class="mb-addr">
+            <div class="mb-addr-text">sistemgudangobat.infinityfreeapp.com</div>
+          </div>
+        </div>
+        <div class="mockup-body">
+          <div class="mock-sidebar">
+            <div class="mock-logo-area">
+              <div class="mock-logo-sq"></div>
+              <div class="mock-logo-txt">SIGUDOB</div>
+            </div>
+            <div class="mock-nav-section">Utama</div>
+            <div class="mock-nav-item active">
+              <div class="mock-nav-dot active-dot"></div>
+              Dashboard
+            </div>
+            <div class="mock-nav-item">
+              <div class="mock-nav-dot"></div>
+              Monitor Stok
+            </div>
+            <div class="mock-nav-section">Master Data</div>
+            <div class="mock-nav-item">
+              <div class="mock-nav-dot"></div>
+              Master Obat
+            </div>
+            <div class="mock-nav-item">
+              <div class="mock-nav-dot"></div>
+              Master Gudang
+            </div>
+            <div class="mock-nav-section">Transaksi</div>
+            <div class="mock-nav-item">
+              <div class="mock-nav-dot"></div>
+              Pembelian
+            </div>
+            <div class="mock-nav-item">
+              <div class="mock-nav-dot"></div>
+              Distribusi
+            </div>
+            <div class="mock-nav-section">Laporan</div>
+            <div class="mock-nav-item">
+              <div class="mock-nav-dot"></div>
+              Laporan
+            </div>
+          </div>
+          <div class="mock-main">
+            <div class="mock-topbar">
+              <div class="mock-page-title">Dashboard</div>
+              <div class="mock-user-badge">
+                <div class="mock-avatar"></div>
+                <div class="mock-username">Admin Dinkes</div>
+              </div>
+            </div>
+            <div class="mock-stats-row">
+              <div class="mock-stat-card">
+                <div class="mock-stat-label">Total Obat</div>
+                <div class="mock-stat-num">284</div>
+              </div>
+              <div class="mock-stat-card">
+                <div class="mock-stat-label">Stok Total</div>
+                <div class="mock-stat-num">12.4k</div>
+              </div>
+              <div class="mock-stat-card">
+                <div class="mock-stat-label">Stok Kritis</div>
+                <div class="mock-stat-num warn">8</div>
+              </div>
+              <div class="mock-stat-card">
+                <div class="mock-stat-label">Exp < 30hr</div>
+                <div class="mock-stat-num warn">3</div>
+              </div>
+            </div>
+            <div class="mock-table-area">
+              <div class="mock-table-head">
+                <div class="mock-th">Nama Obat</div>
+                <div class="mock-th">Stok</div>
+                <div class="mock-th">Exp Date</div>
+                <div class="mock-th">Status</div>
+              </div>
+              <div class="mock-row">
+                <div class="mock-td">Amoxicillin 500mg</div>
+                <div class="mock-td">1.200</div>
+                <div class="mock-td">12/2026</div>
+                <div><span class="mock-badge aman">Aman</span></div>
+              </div>
+              <div class="mock-row">
+                <div class="mock-td">Paracetamol 500mg</div>
+                <div class="mock-td">85</div>
+                <div class="mock-td">03/2025</div>
+                <div><span class="mock-badge kritis">Kritis</span></div>
+              </div>
+              <div class="mock-row">
+                <div class="mock-td">ORS Sachet</div>
+                <div class="mock-td">180</div>
+                <div class="mock-td">08/2025</div>
+                <div><span class="mock-badge hampir">Hampir</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating cards -->
+      <div class="float-card card-1">
+        <div class="float-icon green">✅</div>
+        <div>
+          <div class="float-card-title">Distribusi Berhasil</div>
+          <div class="float-card-sub">Puskesmas Ungaran — baru saja</div>
+        </div>
+      </div>
+      <div class="float-card card-2">
+        <div class="float-icon blue">📦</div>
+        <div>
+          <div class="float-card-title">Metode FEFO</div>
+          <div class="float-card-sub">First Expired First Out</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="fitur">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Fitur Unggulan</div>
+      <h2 class="section-title">Semua yang Anda Butuhkan<br><span class="blue">dalam Satu Platform</span></h2>
+      <p class="section-desc">Dari pengadaan hingga laporan, SIGUDOB menyediakan modul lengkap untuk tata kelola obat yang transparan dan akuntabel.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feat-icon blue">📊</div>
+        <div class="feat-title">Dashboard Real-Time</div>
+        <p class="feat-desc">Pantau ringkasan stok, item kritis, dan obat mendekati expired langsung dari dashboard dengan chart distribusi bulanan.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon sky">📦</div>
+        <div class="feat-title">Monitor Stok</div>
+        <p class="feat-desc">Lihat stok per gudang, per batch, beserta status level stok (aman, hampir habis, kritis) secara menyeluruh.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon green">🚚</div>
+        <div class="feat-title">Distribusi FEFO</div>
+        <p class="feat-desc">Distribusi obat dari Dinkes ke Puskesmas menggunakan metode First Expired First Out otomatis untuk meminimalkan pemborosan.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon amber">🛒</div>
+        <div class="feat-title">Manajemen Pembelian</div>
+        <p class="feat-desc">Catat dan kelola pembelian obat dari supplier lengkap dengan informasi batch, tanggal expired, dan satuan.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon purple">📝</div>
+        <div class="feat-title">Permintaan & Opname</div>
+        <p class="feat-desc">Puskesmas dapat mengajukan permintaan obat ke Dinkes, dan melakukan opname stok secara periodik dengan validasi sistem.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon red">📋</div>
+        <div class="feat-title">Laporan & Ekspor</div>
+        <p class="feat-desc">Generate laporan stok, distribusi, dan pemakaian dengan filter tanggal, kemudian ekspor ke PDF atau CSV.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="cara-kerja" class="how-bg">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Cara Kerja</div>
+      <h2 class="section-title">Dua Role, <span class="blue">Satu Ekosistem</span></h2>
+      <p class="section-desc">SIGUDOB dirancang untuk dua jenis pengguna dengan hak akses yang berbeda namun saling terhubung.</p>
+    </div>
+    <div class="roles-grid">
+      <div class="role-card">
+        <div class="role-title-row">
+          <div class="role-icon dinkes">🏥</div>
+          <div>
+            <div class="role-title">Dinas Kesehatan</div>
+            <div class="role-subtitle">Admin Pusat</div>
+          </div>
+        </div>
+        <ul class="role-features">
+          <li><span class="check-icon">✓</span>Kelola master data: obat, batch, supplier, satuan, gudang, dan user</li>
+          <li><span class="check-icon">✓</span>Input pembelian obat dari supplier ke gudang Dinkes</li>
+          <li><span class="check-icon">✓</span>Distribusi obat ke Puskesmas dengan metode FEFO otomatis</li>
+          <li><span class="check-icon">✓</span>Monitor stok seluruh Puskesmas dalam satu tampilan</li>
+          <li><span class="check-icon">✓</span>Proses penghapusan obat yang rusak atau kadaluarsa</li>
+          <li><span class="check-icon">✓</span>Lihat & ekspor laporan komprehensif seluruh jaringan</li>
+        </ul>
+      </div>
+      <div class="role-card">
+        <div class="role-title-row">
+          <div class="role-icon puskesmas">🏛️</div>
+          <div>
+            <div class="role-title">Puskesmas</div>
+            <div class="role-subtitle">Unit Pelayanan</div>
+          </div>
+        </div>
+        <ul class="role-features">
+          <li><span class="check-icon">✓</span>Ajukan permintaan obat ke Dinkes melalui sistem digital</li>
+          <li><span class="check-icon">✓</span>Terima dan verifikasi distribusi obat dari Dinkes</li>
+          <li><span class="check-icon">✓</span>Catat pemakaian obat untuk kegiatan pelayanan kesehatan</li>
+          <li><span class="check-icon">✓</span>Lakukan opname stok secara berkala dan laporan ke sistem</li>
+          <li><span class="check-icon">✓</span>Proses retur obat ke Dinkes bila diperlukan</li>
+          <li><span class="check-icon">✓</span>Monitor kondisi stok gudang sendiri secara mandiri</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="teknologi" class="tech-section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Teknologi</div>
+      <h2 class="section-title">Dibangun dengan Teknologi Modern</h2>
+      <p class="section-desc">Stack yang ringan, cepat, dan bisa dijalankan di hosting shared sekalipun.</p>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-icon">⚛️</div>
+        <div class="tech-name">React 18</div>
+        <div class="tech-role">Frontend UI</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">⚡</div>
+        <div class="tech-name">Vite</div>
+        <div class="tech-role">Build Tool</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🐘</div>
+        <div class="tech-name">PHP + MySQL</div>
+        <div class="tech-role">Backend & Database</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🔐</div>
+        <div class="tech-name">JWT Auth</div>
+        <div class="tech-role">Keamanan Akun</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🌐</div>
+        <div class="tech-name">REST API</div>
+        <div class="tech-role">Komunikasi Data</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">📄</div>
+        <div class="tech-name">jsPDF</div>
+        <div class="tech-role">Export Laporan PDF</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🎨</div>
+        <div class="tech-name">Lucide React</div>
+        <div class="tech-role">Icon Library</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🛡️</div>
+        <div class="tech-name">Audit Logs</div>
+        <div class="tech-role">Jejak Perubahan</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-inner" style="text-align:center;">
+    <div class="section-label">Mulai Sekarang</div>
+    <h2 class="section-title" style="margin-bottom:16px;">Siap Digitalisasi<br>Manajemen Obat Anda?</h2>
+    <p class="cta-desc">Akses SIGUDOB langsung dari browser. Tidak perlu instalasi — cukup login dan mulai kelola stok obat Anda.</p>
+    <a href="http://sistemgudangobat.infinityfreeapp.com/" target="_blank" class="cta-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v8M8 12h8"/>
+      </svg>
+      Akses Aplikasi SIGUDOB
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <div class="footer-logo-icon">
+      <svg viewBox="0 0 20 20" fill="none" width="18" height="18">
+        <rect x="2" y="5" width="16" height="12" rx="2" fill="white" opacity="0.4"/>
+        <rect x="4" y="7" width="12" height="8" rx="1" fill="white" opacity="0.6"/>
+        <path d="M7 3h6l1 2H6L7 3z" fill="white"/>
+      </svg>
+    </div>
+    <div class="footer-logo-text">SIGU<span>DOB</span></div>
+  </div>
+  <p class="footer-desc">Sistem Informasi Gudang Obat — Platform Manajemen Stok Obat Terpadu</p>
+  <p class="footer-copy">© 2026 SIGUDOB. Dibuat untuk mendukung digitalisasi layanan kesehatan Indonesia.</p>
+</footer>
+
+</body>
+</html>
